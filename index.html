@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tech Creator | Home</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      color: #0a1e5e;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #0a1e5e;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+      display: none;
+      flex-grow: 1;
+    }
+    footer {
+      background-color: #0a1e5e;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .cookie-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .cookie-box {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .cookie-box p {
+      margin-bottom: 1.5rem;
+      color: #0a1e5e;
+    }
+
+    .cookie-buttons,
+    .preference-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background-color: #0a1e5e;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-link {
+      background: none;
+      border: none;
+      color: #0a1e5e;
+      font-size: 1rem;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .cookie-preferences {
+      display: none;
+      text-align: left;
+      margin-top: 1rem;
+    }
+
+    .cookie-preferences label {
+      display: block;
+      margin: 5px 0;
+    }
+
+    .form-link {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .form-link a {
+      color: red;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    .about-image {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .about-image img {
+      width: 300px;
+      height: auto;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="cookie-overlay" id="cookieOverlay">
+    <div class="cookie-box" id="initialCookieBox">
+      <p>This website uses cookies to enhance your browsing experience. Please accept or manage your preferences to continue.</p>
+      <div class="cookie-buttons">
+        <button class="btn-primary" onclick="acceptCookies()">Accept All</button>
+        <button class="btn-link" onclick="showPreferences()">Manage Preferences</button>
+      </div>
+    </div>
+    <div class="cookie-box" id="preferencesBox" style="display: none;">
+      <p>Select the types of cookies you want to allow:</p>
+      <div class="cookie-preferences">
+        <label><input type="checkbox" id="performanceCookies"> Allow performance cookies</label>
+        <label><input type="checkbox" id="sessionCookies"> Allow session cookies</label>
+      </div>
+      <div class="preference-buttons">
+        <button class="btn-primary" onclick="savePreferences(true)">Accept All</button>
+        <button class="btn-link" onclick="savePreferences(false)">Reject All</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <h1>Welcome to My Tech Corner</h1>
+    <p>Exploring the Future of Technology</p>
+  </header>
+
+  <main id="mainContent">
+    <h2>About Me</h2>
+    <div class="about-image">
+      <img src="EkaUXimage.jpg" alt="Ekaete working on a laptop" />
+    </div>
+    <p>Hi, I'm Ekaete, a current MSc student of Cybersecurity at the University Of Sunderland. I am also a tech content creator on social media, passionate about making complex tech topics simple and engaging. I am handling research at the University and would be happy if you participate in it.</p>
+
+    <h2>What I Do</h2>
+    <ul>
+      <li>Handle Critical Research</li>
+      <li>Tech tutorials & how-tos</li>
+      <li>Reviews of gadgets and software</li>
+      <li>Insights on emerging tech trends</li>
+      <li>Educational content for aspiring tech enthusiasts</li>
+    </ul>
+
+    <div class="form-link">
+      <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScnXgerwZPubMerJ6N5pWTYayPWnGqUQ7kq9XPyKLrPoFADbQ/viewform?usp=header">Please note this is optional. Click here to fill out a quick questionnaire and assist with my current research work</a></p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Tech Creator. All rights reserved.</p>
+    <p>Contact: <a href="mailto:bh96om@student.sunderland.ac.uk" style="color: white; text-decoration: underline;">bh96om@student.sunderland.ac.uk</a></p>
+  </footer>
+
+  <script>
+    let pageLoadTime;
+
+    window.onload = function () {
+      pageLoadTime = Date.now();
+      const consent = sessionStorage.getItem('cookieConsent');
+      if (consent) {
+        document.getElementById('cookieOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+      } else {
+        document.getElementById('cookieOverlay').style.display = 'flex';
+      }
+    };
+
+    function sendDecisionToSheetDB(decision) {
+      const decisionTime = Date.now();
+      const timeTaken = ((decisionTime - pageLoadTime) / 1000).toFixed(2);
+
+      const data = {
+        data: {
+          decision: decision,
+          timestamp: new Date().toISOString(),
+          time_taken_seconds: timeTaken
+        }
+      };
+
+      fetch("https://sheetdb.io/api/v1/nf3zsp4zv614j", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(data => console.log("Logged:", data))
+      .catch(err => console.error("Logging failed:", err));
+    }
+
+    function acceptCookies() {
+      sessionStorage.setItem('cookieConsent', 'accepted');
+      sendDecisionToSheetDB('Accepted All');
+      document.getElementById('cookieOverlay').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
+
+    function rejectCookies() {
+      sessionStorage.setItem('cookieConsent', 'rejected');
+      sendDecisionToSheetDB('Rejected All');
+      document.getElementById('cookieOverlay').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
+
+    function showPreferences() {
+      document.getElementById('initialCookieBox').style.display = 'none';
+      document.getElementById('preferencesBox').style.display = 'block';
+      document.querySelector('.cookie-preferences').style.display = 'block';
+    }
+
+    function savePreferences(accepted) {
+      const decision = accepted ? 'Accepted Preferences' : 'Rejected Preferences';
+      sessionStorage.setItem('cookieConsent', accepted ? 'accepted' : 'rejected');
+      sendDecisionToSheetDB(decision);
+      document.getElementById('cookieOverlay').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
